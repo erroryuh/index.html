@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error (@errorr) | Bio Link</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #08080c;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        .mono-font {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Glassmorphism background card */
+        .glass-card {
+            background: rgba(18, 18, 24, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card-hover:hover {
+            background: rgba(28, 28, 38, 0.85);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.7), 0 0 15px rgba(255, 255, 255, 0.08);
+        }
+
+        /* Neon Profile Ring Pulse */
+        .avatar-ring {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 15px rgba(239, 68, 68, 0.3);
+            animation: ringPulse 3s infinite alternate;
+        }
+
+        @keyframes ringPulse {
+            0% {
+                box-shadow: 0 0 15px rgba(239, 68, 68, 0.3), inset 0 0 10px rgba(239, 68, 68, 0.2);
+            }
+            100% {
+                box-shadow: 0 0 25px rgba(239, 68, 68, 0.7), inset 0 0 20px rgba(239, 68, 68, 0.5);
+            }
+        }
+
+        /* Glowing text effects */
+        .glow-text {
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+        }
+
+        .glow-red {
+            text-shadow: 0 0 12px rgba(239, 68, 68, 0.7);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #08080c;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27273a;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f5a;
+        }
+
+        /* Canvas fixed background overlay */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 relative selection:bg-red-500/30 selection:text-red-200">
+
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Background GIF Overlay with Dark Gradient -->
+    <div class="fixed inset-0 z-0 bg-cover bg-center opacity-20 pointer-events-none filter grayscale contrast-125 mix-blend-luminosity" style="background-image: url('https://images.unsplash.com/photo-1578632767115-351597cf2477?q=80&w=1000&auto=format&fit=crop');"></div>
+    <div class="fixed inset-0 z-0 bg-radial from-transparent via-[#08080c]/80 to-[#08080c] pointer-events-none"></div>
+
+    <div class="fixed top-5 left-5 z-20">
+        <button id="audioToggleBtn" onclick="toggleAudio()" class="glass-card px-3.5 py-2 rounded-full flex items-center space-x-2 text-xs font-medium text-gray-300 hover:text-white transition-all duration-300 hover:scale-105">
+            <i id="audioIcon" class="fa-solid fa-volume-xmark text-red-400"></i>
+            <span id="audioStatus">Muted</span>
+        </button>
+    </div>
+
+    <!-- Location badge top right -->
+    <div class="fixed top-5 right-5 z-20">
+        <div class="glass-card px-3.5 py-2 rounded-full flex items-center space-x-2 text-xs font-medium text-gray-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="mono-font"><i class="fa-solid fa-location-dot text-gray-400 mr-1"></i> Norway</span>
+        </div>
+    </div>
+
+    <main class="relative z-10 w-full max-w-md my-8 flex flex-col items-center">
+        
+        <!-- Header / Profile Section -->
+        <div class="glass-card w-full p-6 rounded-3xl flex flex-col items-center text-center relative overflow-hidden mb-4 border border-white/10">
+            
+            <!-- Subtle glow accent line -->
+            <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-red-500/50 to-transparent"></div>
+
+            <!-- Profile Picture with Ring -->
+            <div class="relative group cursor-pointer mb-4">
+                <div class="w-28 h-28 rounded-full border-2 border-red-500/80 p-1 avatar-ring transition-transform duration-500 group-hover:scale-105">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=600&auto=format&fit=crop" 
+                         alt="Error Profile Picture" 
+                         class="w-full h-full object-cover rounded-full filter grayscale contrast-125"
+                         onerror="this.src='https://placehold.co/200x200/181824/ffffff?text=Error'">
+                </div>
+                <span class="absolute bottom-1 right-1 w-5 h-5 bg-emerald-500 border-4 border-[#08080c] rounded-full" title="Online"></span>
+            </div>
+
+            <!-- Profile Name & Badges -->
+            <div class="flex items-center space-x-2 mb-1">
+                <h1 class="text-2xl font-bold tracking-tight text-white glow-text">Error</h1>
+                <span class="bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider mono-font">
+                    <i class="fa-solid fa-code text-[9px] mr-1"></i>DEV
+                </span>
+                <span class="text-purple-400" title="Verified Badge">
+                    <i class="fa-solid fa-circle-check text-sm"></i>
+                </span>
+            </div>
+            
+            <p class="text-xs text-gray-400 mono-font mb-3">@errorr • <span class="text-gray-300">she/her</span></p>
+
+            <!-- Bio Description -->
+            <p class="text-xs text-gray-300 leading-relaxed max-w-xs mb-4">
+                Full-stack developer & gamer. Lost in code and dark aesthetic beats.
+            </p>
+
+            <!-- Quick Info Badges -->
+            <div class="flex flex-wrap gap-2 justify-center text-[11px] text-gray-300">
+                <span class="bg-white/5 border border-white/10 px-3 py-1 rounded-full flex items-center">
+                    <i class="fa-solid fa-snowflake text-cyan-400 mr-1.5 text-xs"></i> Haunt.gg Elite
+                </span>
+                <span class="bg-white/5 border border-white/10 px-3 py-1 rounded-full flex items-center">
+                    <i class="fa-solid fa-gamepad text-red-400 mr-1.5 text-xs"></i> Radiant Grinder
+                </span>
+            </div>
+        </div>
+
+        <!-- Featured Section: Valorant Card -->
+        <a href="https://tracker.gg/valorant/profile/riot/error%2307105/overview" target="_blank" rel="noopener noreferrer" 
+           class="glass-card glass-card-hover w-full p-4 rounded-2xl mb-4 flex items-center justify-between group relative overflow-hidden border border-red-500/20">
+            
+            <!-- Valorant Accent Background Glow -->
+            <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-red-600/10 rounded-full blur-2xl group-hover:bg-red-600/20 transition-all"></div>
+
+            <div class="flex items-center space-x-3.5 z-10">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-red-600/30 to-red-950/60 border border-red-500/40 flex items-center justify-center text-red-400 text-xl group-hover:scale-110 transition-transform">
+                    <i class="fa-solid fa-crosshairs"></i>
+                </div>
+                <div class="text-left">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-sm font-bold text-white group-hover:text-red-400 transition-colors">error#07105</span>
+                        <span class="bg-red-500/20 text-red-300 text-[10px] px-1.5 py-0.2 rounded border border-red-500/30 font-semibold">VALORANT</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-0.5 flex items-center">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+                        Level 113 • Peak Ascendant
+                    </p>
+                </div>
+            </div>
+
+            <div class="z-10 text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all">
+                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </div>
+        </a>
+
+        <!-- Social Links Stack -->
+        <div class="w-full space-y-2.5 mb-4">
+            
+            <!-- Discord Server -->
+            <a href="https://discord.gg/riotgamesdevrel" target="_blank" rel="noopener noreferrer" 
+               class="glass-card glass-card-hover w-full py-3.5 px-4 rounded-2xl flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-brands fa-discord text-indigo-400 text-lg w-6 text-center group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold text-gray-200 group-hover:text-white">Discord Server</span>
+                </div>
+                <span class="text-xs text-gray-500 group-hover:text-gray-300 mono-font">Join Community <i class="fa-solid fa-chevron-right text-[10px] ml-1"></i></span>
+            </a>
+
+            <!-- Twitter / X -->
+            <a href="https://x.com/error_yoh" target="_blank" rel="noopener noreferrer" 
+               class="glass-card glass-card-hover w-full py-3.5 px-4 rounded-2xl flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-brands fa-x-twitter text-white text-lg w-6 text-center group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold text-gray-200 group-hover:text-white">Twitter / X</span>
+                </div>
+                <span class="text-xs text-gray-500 group-hover:text-gray-300 mono-font">@error_yoh <i class="fa-solid fa-chevron-right text-[10px] ml-1"></i></span>
+            </a>
+
+            <!-- TikTok -->
+            <a href="https://tiktok.com/@.errorr_" target="_blank" rel="noopener noreferrer" 
+               class="glass-card glass-card-hover w-full py-3.5 px-4 rounded-2xl flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-brands fa-tiktok text-cyan-400 text-lg w-6 text-center group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold text-gray-200 group-hover:text-white">TikTok</span>
+                </div>
+                <span class="text-xs text-gray-500 group-hover:text-gray-300 mono-font">@.errorr_ <i class="fa-solid fa-chevron-right text-[10px] ml-1"></i></span>
+            </a>
+
+            <!-- Haunt.gg Profile -->
+            <a href="https://haunt.gg/errorr" target="_blank" rel="noopener noreferrer" 
+               class="glass-card glass-card-hover w-full py-3.5 px-4 rounded-2xl flex items-center justify-between group">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-ghost text-purple-400 text-lg w-6 text-center group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold text-gray-200 group-hover:text-white">Haunt Profile</span>
+                </div>
+                <span class="text-xs text-gray-500 group-hover:text-gray-300 mono-font">haunt.gg/errorr <i class="fa-solid fa-chevron-right text-[10px] ml-1"></i></span>
+            </a>
+
+            <!-- Email Button (With Click-to-Copy Tooltip) -->
+            <div id="emailBtn" onclick="copyEmail()" 
+                 class="glass-card glass-card-hover w-full py-3.5 px-4 rounded-2xl flex items-center justify-between cursor-pointer group relative">
+                <div class="flex items-center space-x-3">
+                    <i class="fa-solid fa-envelope text-emerald-400 text-lg w-6 text-center group-hover:scale-110 transition-transform"></i>
+                    <span class="text-sm font-semibold text-gray-200 group-hover:text-white">Contact Email</span>
+                </div>
+                <span id="emailText" class="text-xs text-gray-400 group-hover:text-emerald-300 mono-font transition-colors">
+                    errorrr@tuta.io <i class="fa-regular fa-copy ml-1"></i>
+                </span>
+                
+                <!-- Toast Alert Notification -->
+                <div id="copyToast" class="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-emerald-500 text-black text-xs font-bold px-3 py-1 rounded-full shadow-lg opacity-0 transition-all duration-300 pointer-events-none">
+                    Copied to clipboard!
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Audio Player Widget -->
+        <div class="glass-card w-full p-4 rounded-2xl flex items-center justify-between border border-white/5">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-900 to-red-900 flex items-center justify-center text-white text-sm relative overflow-hidden">
+                    <i class="fa-solid fa-music animate-pulse"></i>
+                </div>
+                <div class="text-left">
+                    <p class="text-xs font-bold text-white truncate max-w-[170px]">Trackmaker - Phonk Edit</p>
+                    <p class="text-[11px] text-gray-400">Audio Preview Player</p>
+                </div>
+            </div>
+            <button onclick="toggleAudio()" class="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white text-xs transition-colors">
+                <i id="playerPlayIcon" class="fa-solid fa-play"></i>
+            </button>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-8 text-center text-[11px] text-gray-500 mono-font flex items-center justify-center space-x-2">
+            <span>© 2026 error. All rights reserved.</span>
+            <span>•</span>
+            <a href="https://haunt.gg" target="_blank" class="hover:text-gray-300 transition-colors">haunt.gg</a>
+        </footer>
+
+    </main>
+
+    <!-- Hidden audio element for dark aesthetic ambient audio -->
+    <audio id="bgAudio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=cyberpunk-2099-10701.mp3"></audio>
+
+    <script>
+        // Copy Email Logic
+        function copyEmail() {
+            const email = "errorrr@tuta.io";
+            
+            // Clipboard fallback mechanism
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(email);
+            } else {
+                const tempInput = document.createElement("input");
+                tempInput.value = email;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+            }
+
+            // Show Toast
+            const toast = document.getElementById("copyToast");
+            toast.classList.remove("opacity-0", "-top-10");
+            toast.classList.add("opacity-100", "-top-12");
+
+            setTimeout(() => {
+                toast.classList.remove("opacity-100", "-top-12");
+                toast.classList.add("opacity-0", "-top-10");
+            }, 2000);
+        }
+
+        // Audio Player Controls
+        const audio = document.getElementById('bgAudio');
+        const audioStatus = document.getElementById('audioStatus');
+        const audioIcon = document.getElementById('audioIcon');
+        const playerPlayIcon = document.getElementById('playerPlayIcon');
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    audioStatus.innerText = "Playing";
+                    audioIcon.className = "fa-solid fa-volume-high text-emerald-400";
+                    playerPlayIcon.className = "fa-solid fa-pause";
+                }).catch(err => {
+                    console.log("Autoplay blocked or audio load error: ", err);
+                });
+            } else {
+                audio.pause();
+                audioStatus.innerText = "Muted";
+                audioIcon.className = "fa-solid fa-volume-xmark text-red-400";
+                playerPlayIcon.className = "fa-solid fa-play";
+            }
+        }
+
+        // Particle / Snowflake Canvas Simulation
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        const particles = [];
+        const particleCount = 45;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedY = Math.random() * 0.8 + 0.2;
+                this.speedX = Math.random() * 0.4 - 0.2;
+                this.opacity = Math.random() * 0.6 + 0.2;
+            }
+
+            update() {
+                this.y += this.speedY;
+                this.x += this.speedX;
+
+                if (this.y > height) {
+                    this.y = 0;
+                    this.x = Math.random() * width;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        window.onload = function() {
+            animate();
+        };
+    </script>
+</body>
+</html>
