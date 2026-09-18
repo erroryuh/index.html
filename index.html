@@ -48,12 +48,6 @@
       gap: 6px;
       cursor: pointer;
     }
-    .status-dot {
-      width: 6px;
-      height: 6px;
-      background: #22c55e;
-      border-radius: 50%;
-    }
     .profile-section {
       text-align: center;
       margin-bottom: 20px;
@@ -76,29 +70,36 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
     .username {
       font-size: 22px;
       font-weight: 700;
       color: #fff;
     }
-    .badge {
-      font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-weight: 600;
-      text-transform: uppercase;
-      display: inline-flex;
+    
+    /* DISCORD STYLE BADGES CONTAINER */
+    .badges-container {
+      display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      background: rgba(25, 25, 35, 0.6);
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid #2a2a38;
     }
-    .badge.verified { background: #3b82f622; color: #60a5fa; border: 1px solid #3b82f644; }
-    .badge.dev { background: #ef444422; color: #f87171; border: 1px solid #ef444444; }
-    .badge.operator { background: #10b98122; color: #34d399; border: 1px solid #10b98144; }
-    .badge.owner { background: #f59e0b22; color: #fbbf24; border: 1px solid #f59e0b44; }
+    .badge-icon {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .badge-icon:hover {
+      transform: scale(1.2);
+    }
     
     .tagline {
       font-size: 13px;
@@ -224,10 +225,15 @@
       
       <div class="username-row">
         <span class="username">Error</span>
-        <span class="badge dev">&lt;/&gt; DEV</span>
-        <span class="badge verified">✓</span>
-        <span class="badge operator">🛠️ OPERATOR</span>
-        <span class="badge owner">👑 OWNER</span>
+        
+        <!-- DISCORD BADGES WITH TOOLTIPS -->
+        <div class="badges-container">
+          <img src="https://files.catbox.moe/nvb80p.gif" alt="Owner" title="Owner" class="badge-icon">
+          <img src="https://files.catbox.moe/gw7rk1.png" alt="Moderator" title="Moderator" class="badge-icon">
+          <img src="https://files.catbox.moe/zcbnk0.png" alt="Staff" title="Staff" class="badge-icon">
+          <img src="https://files.catbox.moe/o430d4.png" alt="Early Verified Bot Developer" title="Early Verified Bot Developer" class="badge-icon">
+          <img src="https://files.catbox.moe/oh5l2i.png" alt="Verified" title="Verified" class="badge-icon">
+        </div>
       </div>
       
       <div class="tagline">@errorr • she/her</div>
@@ -297,4 +303,4 @@
     }, { once: true });
   </script>
 </body>
-        </html>
+  </html>
