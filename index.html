@@ -19,17 +19,45 @@
       align-items: center;
       min-height: 100vh;
       padding: 20px 10px;
+      overflow-x: hidden;
     }
+
+    /* FULLSCREEN BACKGROUND VIDEO */
+    .bg-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+    }
+    
+    /* OVERLAY FOR DARK AESTHETIC READABILITY */
+    .bg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: -1;
+    }
+
+    /* GLASS CARD CONTAINER */
     .card {
-      background: #121217;
-      border: 1px solid #1f1f28;
+      background: rgba(18, 18, 23, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 16px;
       width: 100%;
       max-width: 420px;
       padding: 24px 20px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
       position: relative;
+      z-index: 1;
     }
+
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -39,15 +67,16 @@
       margin-bottom: 20px;
     }
     .status-btn {
-      background: #1a1a24;
+      background: rgba(26, 26, 36, 0.8);
       padding: 6px 12px;
       border-radius: 20px;
-      border: 1px solid #2a2a38;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
     }
+    
     .profile-section {
       text-align: center;
       margin-bottom: 20px;
@@ -88,7 +117,7 @@
       background: rgba(25, 25, 35, 0.6);
       padding: 4px 8px;
       border-radius: 8px;
-      border: 1px solid #2a2a38;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
     .badge-icon {
       width: 18px;
@@ -119,18 +148,80 @@
       margin-bottom: 20px;
     }
     .tag {
-      background: #181822;
-      border: 1px solid #282838;
+      background: rgba(24, 24, 34, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       padding: 4px 10px;
       border-radius: 12px;
       font-size: 11px;
       color: #8888aa;
     }
 
+    /* DISCORD SERVER WIDGET */
+    .discord-widget {
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.15) 0%, rgba(18, 18, 23, 0.9) 100%);
+      border: 1px solid rgba(88, 101, 242, 0.3);
+      border-radius: 12px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      text-decoration: none;
+      color: #fff;
+      transition: 0.2s ease;
+    }
+    .discord-widget:hover {
+      border-color: #5865F2;
+      background: linear-gradient(135deg, rgba(88, 101, 242, 0.25) 0%, rgba(18, 18, 23, 0.9) 100%);
+    }
+    .dc-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .dc-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #5865F2;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 10px rgba(88, 101, 242, 0.4);
+    }
+    .dc-title {
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+    }
+    .dc-sub {
+      font-size: 11px;
+      color: #22c55e;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 2px;
+    }
+    .dc-dot {
+      width: 6px;
+      height: 6px;
+      background: #22c55e;
+      border-radius: 50%;
+    }
+    .dc-join-btn {
+      background: #5865F2;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
     /* VALORANT CARD (HAUNT.GG STYLE) */
     .val-card {
-      background: linear-gradient(135deg, #1c151c 0%, #121218 100%);
-      border: 1px solid #38202d;
+      background: linear-gradient(135deg, rgba(28, 21, 28, 0.9) 0%, rgba(18, 18, 24, 0.9) 100%);
+      border: 1px solid rgba(239, 68, 68, 0.2);
       border-radius: 12px;
       padding: 12px 16px;
       display: flex;
@@ -180,8 +271,8 @@
       gap: 10px;
     }
     .link-item {
-      background: #16161f;
-      border: 1px solid #222230;
+      background: rgba(22, 22, 31, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 10px;
       padding: 12px 16px;
       display: flex;
@@ -194,8 +285,8 @@
       transition: 0.2s;
     }
     .link-item:hover {
-      background: #1e1e2c;
-      border-color: #383850;
+      background: rgba(30, 30, 44, 0.9);
+      border-color: rgba(255, 255, 255, 0.15);
     }
     .link-sub {
       font-size: 12px;
@@ -205,9 +296,15 @@
 </head>
 <body>
 
-  <!-- BACKGROUND MUSIC -->
+  <!-- BACKGROUND MP4 VIDEO (MUTED ABSOLUTELY) -->
+  <video class="bg-video" autoplay loop muted playsinline>
+    <source src="https://files.catbox.moe/ltic3q.mp4" type="video/mp4">
+  </video>
+  <div class="bg-overlay"></div>
+
+  <!-- CUSTOM BACKGROUND MUSIC -->
   <audio id="bg-music" autoplay loop>
-    <source src="https://files.catbox.moe/cw9rl7.mp3" type="audio/mpeg">
+    <source src="https://files.catbox.moe/tu4z3o.mp3" type="audio/mpeg">
   </audio>
 
   <div class="card">
@@ -245,6 +342,18 @@
       </div>
     </div>
 
+    <!-- DISCORD SERVER WIDGET -->
+    <a href="https://discord.gg/riotgamesdevrel" target="_blank" class="discord-widget">
+      <div class="dc-left">
+        <div class="dc-icon">👾</div>
+        <div>
+          <div class="dc-title">Discord Community</div>
+          <div class="dc-sub"><span class="dc-dot"></span> Active Community • Join Now</div>
+        </div>
+      </div>
+      <div class="dc-join-btn">Join</div>
+    </a>
+
     <!-- VALORANT PROFILE WIDGET -->
     <div class="val-card">
       <div class="val-left">
@@ -258,10 +367,6 @@
 
     <!-- SOCIAL LINKS -->
     <div class="links-list">
-      <a href="https://discord.gg" target="_blank" class="link-item">
-        <span>👾 Discord Server</span>
-        <span class="link-sub">Join Community &gt;</span>
-      </a>
       <a href="https://x.com/error_yoh" target="_blank" class="link-item">
         <span>🐦 Twitter / X</span>
         <span class="link-sub">@error_yoh &gt;</span>
@@ -295,7 +400,7 @@
       }
     }
 
-    // Unmute on first click if browser blocks autoplay
+    // Play music on first user tap/click
     document.body.addEventListener('click', () => {
       if(audio.paused) {
         audio.play().catch(() => {});
