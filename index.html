@@ -1,529 +1,753 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMPIRE NETWORK</title>
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Error - Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
 
-        body {
-            background-color: #000;
-            color: #fff;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-x: hidden;
-            position: relative;
-            padding: 40px 20px;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #000 url('https://files.catbox.moe/e7k9s2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow-x: hidden;
+    }
 
-        /* Canvas Snowfall Background */
-        #snowCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.72);
+      z-index: 1;
+    }
 
-        .container {
-            width: 100%;
-            max-width: 600px;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    /* Falling Snowflakes */
+    .snowflake {
+      position: fixed;
+      top: -10px;
+      color: #fff;
+      font-size: 1em;
+      opacity: 0.8;
+      pointer-events: none;
+      z-index: 2;
+      animation: fall linear infinite;
+    }
 
-        /* Avatar Section */
-        .avatar-container {
-            margin-bottom: 25px;
-        }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(100vh) rotate(360deg); }
+    }
 
-        .avatar {
-            width: 130px;
-            height: 130px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #ff1053;
-            box-shadow: 0 0 20px rgba(255, 16, 83, 0.4);
-            transition: transform 0.3s ease;
-        }
+    /* Top Left Floating Speaker Icon */
+    .top-music-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 100;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: #fff;
+      font-size: 18px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      transition: transform 0.2s;
+    }
 
-        .avatar:hover {
-            transform: scale(1.05);
-        }
+    .top-music-btn:hover {
+      transform: scale(1.08);
+    }
 
-        /* Section Titles */
-        .section-title {
-            font-size: 1.2rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: #888;
-            margin: 25px 0 15px 0;
-            width: 100%;
-            text-align: center;
-            border-bottom: 1px solid #222;
-            line-height: 0.1em;
-        }
+    /* Main Phone-style Responsive Container */
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1040px;
+      min-height: 100vh;
+      overflow: visible;
+      padding: 42px 28px 60px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.2) transparent;
+    }
 
-        .section-title span {
-            background: #000;
-            padding: 0 15px;
-        }
+    .container::-webkit-scrollbar {
+      width: 4px;
+    }
+    .container::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 10px;
+    }
 
-        /* Bio Links Section */
-        .bio-links {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    .section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-bottom: 0;
+    }
 
-        .link-card {
-            background: rgba(20, 20, 20, 0.8);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 14px 20px;
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #fff;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(5px);
-        }
+    /* Profile Header */
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-left: 5px;
+    }
 
-        .link-card:hover {
-            background: rgba(40, 40, 40, 0.9);
-            border-color: #555;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.05);
-        }
+    .avatar-wrapper {
+      position: relative;
+      width: 85px;
+      height: 85px;
+    }
 
-        .link-icon {
-            width: 35px;
-            height: 35px;
-            object-fit: contain;
-            margin-right: 15px;
-            border-radius: 6px;
-        }
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-        .link-text {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-            flex-grow: 1;
-        }
+    .avatar-decoration {
+      position: absolute;
+      top: -9px;
+      left: -9px;
+      width: 103px;
+      height: 103px;
+      pointer-events: none;
+    }
 
-        /* Webhook Portal & Products Section */
-        .product-card {
-            background: rgba(15, 15, 15, 0.9);
-            border: 1px solid #2a2a2a;
-            border-radius: 14px;
-            padding: 18px 20px;
-            width: 100%;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+    .username-title {
+      font-size: 2.1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
 
-        .product-card:hover {
-            border-color: #ff1053;
-            box-shadow: 0 0 15px rgba(255, 16, 83, 0.2);
-        }
+    .profile-identity {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+      min-width: 0;
+    }
 
-        .product-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+    .badge-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-height: 24px;
+    }
 
-        .product-title {
-            font-size: 1.05rem;
-            font-weight: 600;
-        }
+    .profile-badge {
+      width: 21px;
+      height: 21px;
+      object-fit: contain;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: transform .16s ease, filter .16s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        .badge-pro {
-            background: #ffd700;
-            color: #000;
-            font-weight: 800;
-            font-size: 0.8rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-        }
+    .profile-badge:hover, .profile-badge:focus-visible {
+      transform: scale(1.15);
+      filter: brightness(1.18);
+      outline: none;
+    }
 
-        .badge-free {
-            background: #00e676;
-            color: #000;
-            font-weight: 800;
-            font-size: 0.8rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
+    .badge-popup {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      transform: translate(-50%, -12px);
+      z-index: 250;
+      padding: 9px 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 13px;
+      background: rgba(15,15,17,.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      transition: opacity .18s ease, transform .18s ease;
+    }
 
-        .badge-sold {
-            background: #ff3d00;
-            color: #fff;
-            font-weight: 800;
-            font-size: 0.8rem;
-            padding: 4px 10px;
-            border-radius: 20px;
-        }
+    .badge-popup.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
 
-        .coming-soon {
-            text-align: center;
-            padding: 25px;
-            background: rgba(15, 15, 15, 0.5);
-            border: 1px dashed #333;
-            border-radius: 12px;
-            width: 100%;
-            color: #666;
-            font-weight: 600;
-            letter-spacing: 2px;
-            margin-top: 10px;
-        }
+    .discord-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex: 0 0 auto;
+    }
 
-        /* Modal / Popup Box */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            backdrop-filter: blur(8px);
-        }
+    /* Cards Wrapper */
+    .cards-wrapper {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
 
-        .modal-content {
-            background: #111;
-            border: 1px solid #333;
-            border-radius: 16px;
-            max-width: 500px;
-            width: 100%;
-            max-height: 85vh;
-            overflow-y: auto;
-            padding: 25px;
-            position: relative;
-        }
+    .card {
+      min-height: 104px;
+      background: rgba(18, 18, 20, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s ease;
+    }
 
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 1.8rem;
-            color: #888;
-            cursor: pointer;
-        }
+    .card:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
 
-        .close-btn:hover {
-            color: #fff;
-        }
+    /* Discord Profile Card with WebM Nameplate */
+    .discord-card {
+      min-height: 104px;
+    }
 
-        .modal-title {
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            color: #fff;
-        }
+    .nameplate-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0.85;
+    }
 
-        .ss-gallery {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
+    .discord-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
 
-        .ss-gallery img {
-            width: 100%;
-            border-radius: 8px;
-            border: 1px solid #222;
-        }
+    /* Exact Valorant Card Design */
+    .valorant-card {
+      background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://files.catbox.moe/e7k9s2.jpg') center/cover;
+      min-height: 104px;
+      position: relative;
+    }
 
-        .buy-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
+    .val-avatar-cut {
+      width: 58px;
+      height: 58px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
 
-        .buy-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: 600;
-            transition: 0.2s;
-        }
+    /* Roblox Profile Card */
+    .roblox-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
 
-        .buy-discord { background: #5865F2; }
-        .buy-server { background: #333; border: 1px solid #555; }
-        .buy-email { background: #ea4335; }
-        .buy-visit { background: #00e676; color: #000; }
+    .roblox-avatar {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-        .buy-btn:hover { opacity: 0.85; }
-    </style>
+    .btn-profile {
+      align-self: flex-start;
+      margin-top: 5px;
+      background: rgba(255, 255, 255, 0.9);
+      color: #000;
+      font-weight: 600;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.2s;
+    }
+
+    .btn-profile:hover {
+      background: #fff;
+    }
+
+    /* Exact Discord Server Card Design */
+    .server-card {
+      background: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url('https://files.catbox.moe/e7k9s2.jpg') center/cover;
+      min-height: 104px;
+    }
+
+    .server-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .server-card.has-banner {
+      background-position: center;
+      background-size: cover;
+    }
+
+    .server-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.58));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .server-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Social Icons Bar (Exact matching icons) */
+    .social-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(18, 18, 20, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      padding: 10px 14px;
+    }
+
+    .social-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-decoration: none;
+      transition: transform 0.2s;
+    }
+
+    .social-btn:hover {
+      transform: scale(1.12);
+    }
+
+    .social-btn img {
+      width: 38px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .location-tag {
+      margin-top: 15px;
+      font-size: 0.8rem;
+      color: #888;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-left: 5px;
+    }
+
+    /* Part 2: About Me Section */
+    .about-card {
+      background: rgba(18, 18, 20, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .about-title {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      color: #ff4b4b;
+    }
+
+    .about-desc {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #d0d0d0;
+      margin-bottom: 10px;
+    }
+
+    .scroll-hint {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.8rem;
+      opacity: 0.6;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+
+    .hero-profile { max-width: 760px; margin: 0 auto; }
+    .main-grid { max-width: 760px; margin: 0 auto; }
+    .about-section-inner { max-width: 1040px; margin: 0 auto; }
+    .social-bar { max-width: 760px; margin-left: auto; margin-right: auto; }
+    .location-tag { max-width: 760px; margin-left: auto; margin-right: auto; }
+    .github-card { max-width: 500px; }
+    .server-card { width: 100%; }
+    .badge-row { display:flex; align-items:center; gap:5px; margin-top:4px; flex-wrap:wrap; }
+    .badge { width:18px; height:18px; border-radius:4px; object-fit:contain; }
+    .status-line { color:#aeb3bd; font-size:.86rem; margin-top:3px; }
+    @media (min-width: 900px) {
+      .hero-profile { max-width: 760px; }
+      .main-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .about-section-inner { padding: 0 0; }
+      .about-card { padding: 22px 30px; }
+      .about-desc { font-size: 1rem; }
+    }
+    @media (max-width: 899px) {
+      .container { max-width: 720px; padding: 24px 26px 55px; }
+      .section { min-height: 100svh; justify-content: center; }
+      .cards-wrapper { grid-template-columns: 1fr; gap: 12px; }
+      .main-grid { grid-template-columns: 1fr; }
+      .profile-header { margin-bottom: 22px; }
+      .username-title { font-size: 2rem; }
+      .profile-identity { max-width: calc(100% - 100px); }
+      .card { min-height: 118px; border-radius: 24px; padding: 16px 24px; }
+      .discord-card, .valorant-card, .server-card { min-height: 118px; }
+      .val-avatar-cut { width: 78px; height: 78px; border-radius: 14px; }
+      .roblox-avatar { width: 78px; height: 78px; }
+      .server-logo { width: 78px; height: 78px; border-radius: 18px; }
+      .social-bar { padding: 10px 16px; }
+      .social-btn { width: 48px; height: 48px; }
+      .social-btn img { width: 31px; height: 31px; }
+      .about-card { padding: 24px 30px; }
+      .about-title { font-size: 2rem; }
+      .about-desc { font-size: 1rem; line-height: 1.7; }
+    }
+    @media (max-width: 520px) {
+      .container { padding: 22px 26px 48px; }
+      .avatar-wrapper { width: 86px; height: 86px; }
+      .avatar-decoration { width: 104px; height:104px; }
+      .username-title { font-size: 2rem; }
+      .card { padding: 15px 20px; min-height: 112px; }
+      .val-avatar-cut, .roblox-avatar, .server-logo { width: 68px; height: 68px; }
+      .about-card { padding: 22px 24px; }
+      .about-title { font-size: 1.85rem; }
+      .about-desc { font-size: .98rem; }
+      .profile-badge { width: 20px; height: 20px; }
+      .social-bar { gap: 2px; }
+      .social-btn { width: 50px; height:50px; }
+      .social-btn img { width:36px; height:36px; }
+    }
+  </style>
 </head>
 <body>
 
-    <!-- Snowfall Canvas -->
-    <canvas id="snowCanvas"></canvas>
+  <div class="overlay"></div>
+  <div class="badge-popup" id="badgePopup" role="status" aria-live="polite"></div>
 
-    <div class="container">
-        <!-- Avatar -->
-        <div class="avatar-container">
-            <img src="https://files.catbox.moe/oufe4q.jpg" alt="Empire Avatar" class="avatar">
+  <!-- Top-Left Sound Icon Button -->
+  <button class="top-music-btn" id="musicBtn" onclick="toggleAudio()" title="Toggle Music">
+    <i class="fa-solid fa-volume-high" id="musicIcon"></i>
+  </button>
+
+  <div class="container">
+    
+    <!-- PART 1: Main Profile & Socials -->
+    <div class="section">
+      <div class="hero-profile">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="avatar-wrapper">
+          <img src="https://files.catbox.moe/gnjfoi.jpg" class="avatar-img" alt="Avatar">
+          <img src="https://files.catbox.moe/031noo.png" class="avatar-decoration" alt="Decoration">
         </div>
-
-        <!-- Links Section -->
-        <div class="section-title"><span>EMPIRE LINKS</span></div>
-        <div class="bio-links">
-            <!-- Empire Server -->
-            <a href="https://discord.gg/empirexe" target="_blank" class="link-card">
-                <img src="https://files.catbox.moe/ec4zqx.gif" alt="Empire" class="link-icon">
-                <span class="link-text">EMPIRE</span>
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-            <!-- Empire OG Server -->
-            <a href="https://discord.gg/AJBZtjnNet" target="_blank" class="link-card">
-                <img src="https://files.catbox.moe/htyfkz.png" alt="Empire OG" class="link-icon">
-                <span class="link-text">EMPIRE OG</span>
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-            <!-- TikTok -->
-            <a href="https://tiktok.com/@ggempirexe" target="_blank" class="link-card">
-                <img src="https://files.catbox.moe/hn5pbb.svg" alt="TikTok" class="link-icon">
-                <span class="link-text">TIKTOK</span>
-                <i class="fa-solid fa-arrow-up-right-from-square"></i>
-            </a>
-
-            <!-- Email -->
-            <a href="mailto:contact@empire.2bd.net" class="link-card">
-                <img src="https://files.catbox.moe/khuu5g.png" alt="Email" class="link-icon">
-                <span class="link-text">contact@empire.2bd.net</span>
-                <i class="fa-solid fa-envelope"></i>
-            </a>
+        <div class="profile-identity">
+          <div class="username-title">Error</div>
+          <div class="badge-row" aria-label="Profile badges">
+            <img class="profile-badge" src="https://files.catbox.moe/nvb80p.gif" data-badge="Owner" alt="Owner" tabindex="0">
+            <img class="profile-badge" src="https://files.catbox.moe/hvh1mo.png" data-badge="Staff" alt="Staff" tabindex="0">
+            <img class="profile-badge" src="https://files.catbox.moe/ib0b0n.png" data-badge="HypeSquad" alt="HypeSquad" tabindex="0">
+            <img class="profile-badge" src="https://files.catbox.moe/ge9n30.png" data-badge="Early Verified Bot Developer" alt="Early Verified Bot Developer" tabindex="0">
+            <img class="profile-badge" src="https://files.catbox.moe/www855.png" data-badge="Discord Early Supporter" alt="Discord Early Supporter" tabindex="0">
+            <img class="profile-badge" src="https://files.catbox.moe/37qigp.png" data-badge="Bug Hunter" alt="Bug Hunter" tabindex="0">
+            <img class="profile-badge" src="https://files.catbox.moe/0yrw81.png" data-badge="Verified" alt="Verified" tabindex="0">
+          </div>
         </div>
+      </div>
 
-        <!-- Webhook Portal Section -->
-        <div class="section-title"><span>WEBHOOK PORTAL</span></div>
-        <div class="bio-links">
-            <!-- Free Webhook -->
-            <div class="product-card" onclick="openModal('freeWebhookModal')">
-                <div class="product-info">
-                    <img src="https://files.catbox.moe/oufe4q.jpg" class="link-icon" alt="Empire">
-                    <span class="product-title">Empire Webhook Free</span>
+      <div class="cards-wrapper main-grid">
+        
+        <!-- Discord Profile Card with Nameplate -->
+        <a href="https://discord.com/users/1263414928967208992" target="_blank" style="text-decoration: none; color: inherit;">
+          <div class="card discord-card">
+            <video class="nameplate-bg" autoplay loop muted playsinline>
+              <source src="https://files.catbox.moe/86un4s.webm" type="video/webm">
+            </video>
+            <div class="discord-content">
+              <img src="https://files.catbox.moe/tlmrva.png" class="discord-avatar" alt="Discord Profile">
+              <div>
+                <div style="font-size: 1rem; font-weight: 600; display: flex; align-items: center; gap: 6px; flex-wrap:wrap;">
+                  Error <span style="background: rgba(255,255,255,0.15); font-size: 0.65rem; padding: 2px 7px; border-radius: 6px; font-weight: 400;">🍃 CODE</span> <span style="color:#9b7cff;">◆</span>
                 </div>
-                <span class="badge-free">FREE</span>
+                <div class="status-line">last seen 43 minutes ago</div>
+              </div>
             </div>
+          </div>
+        </a>
 
-            <!-- Pro Webhook -->
-            <div class="product-card" onclick="openModal('proWebhookModal')">
-                <div class="product-info">
-                    <img src="https://files.catbox.moe/oufe4q.jpg" class="link-icon" alt="Empire">
-                    <span class="product-title">Empire Webhook Pro</span>
-                </div>
-                <span class="badge-pro"><i class="fa-solid fa-dollar-sign"></i> PRO</span>
+        <!-- Exact Valorant Card (from picture 3) -->
+        <a href="https://tracker.gg/valorant/profile/riot/error%2307105/overview?platform=pc&playlist=competitive&season=8102cd81-43a0-d0d7-bd59-47b8fe9bed1b" target="_blank" style="text-decoration: none; color: inherit;">
+          <div class="card valorant-card">
+            <img src="https://files.catbox.moe/nluuah.png" class="val-avatar-cut" alt="Fade Avatar">
+            <div>
+              <div style="font-size: 1.2rem; font-weight: 600; color: #fff;">error#07105</div>
+              <div style="font-size: 0.85rem; color: #b0b5c0; margin-top: 3px; display: flex; align-items: center; gap: 5px;">
+                <i class="fa-solid fa-bullseye" style="font-size: 11px;"></i> Level 113
+              </div>
             </div>
+          </div>
+        </a>
+
+        <!-- Roblox Profile Card with Updated DP -->
+        <div class="card roblox-card">
+          <img src="https://files.catbox.moe/9jfg7z.jpg" class="roblox-avatar" alt="Roblox Avatar">
+          <div>
+            <div style="font-size: 1.05rem; font-weight: 600;">Error</div>
+            <div style="font-size: 0.8rem; color: #b0b0b0; display: flex; gap: 10px; margin-top: 2px;">
+              <span><i class="fa-solid fa-users"></i> 2,343 followers</span>
+              <span><i class="fa-solid fa-user-group"></i> 4 friends</span>
+            </div>
+            <a href="https://www.roblox.com/search/users?keyword=Error" target="_blank" class="btn-profile">
+              View Profile <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 9px;"></i>
+            </a>
+          </div>
         </div>
 
-        <!-- Products / Dynamic Section -->
-        <div class="section-title"><span>PRODUCTS & TOOLS</span></div>
-        <div id="dynamicProductsList" class="bio-links">
-            <!-- JS Inject products from products.js here -->
-        </div>
+      </div>
 
-        <div class="coming-soon">
-            MORE TOOLS & PRODUCTS COMING SOON...
-        </div>
+      <!-- Updated Social Icons Bar -->
+      <div class="social-bar">
+        <a href="https://discord.com/users/1263414928967208992" target="_blank" class="social-btn">
+          <img src="https://files.catbox.moe/zz8pto.png" alt="Discord">
+        </a>
+        <a href="https://x.com/error_yoh" target="_blank" class="social-btn">
+          <img src="https://files.catbox.moe/ip98og.png" alt="X">
+        </a>
+        <a href="https://reddit.com/user/_error" target="_blank" class="social-btn">
+          <img src="https://files.catbox.moe/ymr3wh.png" alt="Reddit">
+        </a>
+        <a href="https://tiktok.com/@.errorr_" target="_blank" class="social-btn">
+          <img src="https://files.catbox.moe/ssa5c5.gif" alt="TikTok">
+        </a>
+        <a href="mailto:noreply@errorr.work.gd" class="social-btn">
+          <img src="https://files.catbox.moe/xonw4l.png" alt="Email">
+        </a>
+        <a href="https://mewe.com/errorr" target="_blank" class="social-btn">
+          <img src="https://files.catbox.moe/64cs6n.png" alt="MeWe">
+        </a>
+        <a href="https://steamcommunity.com/id/errrrorrrr/" target="_blank" class="social-btn">
+          <img src="https://files.catbox.moe/5qmg1t.png" alt="Steam">
+        </a>
+      </div>
+
+      <div class="location-tag">
+        <i class="fa-solid fa-snowflake"></i> Norway
+      </div>
+
+      <div class="scroll-hint">
+        <i class="fa-solid fa-chevron-down"></i> Scroll down
+      </div>
+      </div>
     </div>
 
-    <!-- Free Webhook Modal -->
-    <div id="freeWebhookModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('freeWebhookModal')">&times;</span>
-            <h3 class="modal-title">Empire Webhook Free</h3>
-            <div class="ss-gallery">
-                <img src="https://files.catbox.moe/gvuas4.jpeg" alt="Free Webhook Preview">
+    <!-- PART 2: About Me & Discord Server -->
+    <div class="section">
+      <div class="about-section-inner">
+      <div class="about-card">
+        <h2 class="about-title">About me</h2>
+        <p class="about-desc">
+          Hey, My name is fatina khayer mahi (known as "Error")<br>
+          I'm an Operator and Server Operations Manager. I handle server infra, design websites, and write automation scripts/coders for Discord. Always building, always optimizing.
+        </p>
+        <p class="about-desc" style="font-weight: 600; color: #fff;">
+          ✉️ noreply@errorr.work.gd
+        </p>
+      </div>
+
+      <div class="cards-wrapper">
+        
+        <!-- Exact Discord Server Card (from picture 4) -->
+        <div class="card server-card has-banner" id="serverCard">
+          <img src="https://files.catbox.moe/yjwgf2.png" class="server-logo" id="serverLogo" alt="Server Logo">
+          <div style="flex: 1;">
+            <div id="serverName" style="font-size: 1.05rem; font-weight: 600;">Third Party Developer Community</div>
+            <div style="font-size: 0.8rem; color: #d0d0d0; display: flex; align-items: center; gap: 10px; margin: 4px 0;">
+              <span id="serverOnline"><i class="fa-solid fa-circle" style="color: #23a55a; font-size: 9px;"></i> 5,847 online</span>
+              <span id="serverMembers"><i class="fa-solid fa-circle" style="color: #b5bac1; font-size: 9px;"></i> 23,754 members</span>
             </div>
-            <div class="buy-options">
-                <a href="https://empirexe.netlify.app/" target="_blank" class="buy-btn buy-visit">
-                    <i class="fa-solid fa-globe"></i> Visit Webhook Portal
-                </a>
-            </div>
+            <a href="https://discord.gg/riotgamesdevrel" target="_blank" class="btn-profile">
+              Join Server <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 9px;"></i>
+            </a>
+          </div>
         </div>
+
+        <!-- GitHub Profile Card -->
+        <div class="card">
+          <i class="fa-brands fa-github" style="font-size: 42px; width: 50px; text-align: center;"></i>
+          <div>
+            <div style="font-size: 1.05rem; font-weight: 600;">error</div>
+            <div style="font-size: 0.8rem; color: #b0b0b0; margin-top: 2px;">
+              9 followers • 0 following • 7 repos
+            </div>
+            <a href="https://github.com/error" target="_blank" class="btn-profile">
+              View Profile <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 9px;"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+      </div>
     </div>
 
-    <!-- Pro Webhook Modal -->
-    <div id="proWebhookModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('proWebhookModal')">&times;</span>
-            <h3 class="modal-title">Empire Webhook Pro</h3>
-            <div class="ss-gallery">
-                <img src="https://files.catbox.moe/xl6ez7.jpeg" alt="Preview 1">
-                <img src="https://files.catbox.moe/ru3ov3.jpeg" alt="Preview 2">
-                <img src="https://files.catbox.moe/dz9m1o.jpeg" alt="Preview 3">
-                <img src="https://files.catbox.moe/7ehgsc.jpeg" alt="Preview 4">
-                <img src="https://files.catbox.moe/83seak.jpeg" alt="Preview 5">
-                <img src="https://files.catbox.moe/vzu0vm.jpeg" alt="Preview 6">
-            </div>
-            <p style="margin-bottom:10px; color:#aaa;">To purchase Empire Webhook Pro, contact us via:</p>
-            <div class="buy-options">
-                <a href="https://discord.gg/empirexe" target="_blank" class="buy-btn buy-server">
-                    <i class="fa-brands fa-discord"></i> Join Empire Server
-                </a>
-                <a href="mailto:contact@empire.2bd.net" class="buy-btn buy-email">
-                    <i class="fa-solid fa-envelope"></i> Send Email
-                </a>
-            </div>
-        </div>
-    </div>
+  </div>
 
-    <!-- Dynamic Product Modal Structure -->
-    <div id="dynamicModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('dynamicModal')">&times;</span>
-            <h3 id="dynTitle" class="modal-title"></h3>
-            <div id="dynGallery" class="ss-gallery"></div>
-            <div id="dynContact" class="buy-options"></div>
-        </div>
-    </div>
+  <!-- Audio Element -->
+  <audio id="bgAudio" loop preload="auto" autoplay>
+    <source src="https://files.catbox.moe/hmcn5g.mp3" type="audio/mpeg">
+  </audio>
 
-    <!-- Script Files Connection -->
-    <script src="products.js"></script>
-    <script>
-        // Smooth Snowfall Animation
-        const canvas = document.getElementById('snowCanvas');
-        const ctx = canvas.getContext('2d');
+  <!-- Scripts -->
+  <script>
+    const audio = document.getElementById('bgAudio');
+    const musicIcon = document.getElementById('musicIcon');
+    const badgePopup = document.getElementById('badgePopup');
+    let badgeTimer;
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+    function toggleAudio() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          musicIcon.className = 'fa-solid fa-volume-high';
+        }).catch(() => {});
+      } else {
+        audio.pause();
+        musicIcon.className = 'fa-solid fa-volume-xmark';
+      }
+    }
+
+    function startMusic() {
+      audio.volume = 0.55;
+      audio.muted = false;
+      audio.play().then(() => {
+        musicIcon.className = 'fa-solid fa-volume-high';
+      }).catch(() => {
+        // Modern browsers may block audible autoplay. Start immediately after the visitor's first gesture.
+      });
+    }
+
+    window.addEventListener('load', startMusic);
+    ['pointerdown', 'touchstart', 'keydown'].forEach(eventName => {
+      document.addEventListener(eventName, () => {
+        if (audio.paused) startMusic();
+      }, { once: true, passive: true });
+    });
+
+    // Badge click/tap label — like Discord's badge popover behavior.
+    function showBadge(name) {
+      badgePopup.textContent = name;
+      badgePopup.classList.add('show');
+      clearTimeout(badgeTimer);
+      badgeTimer = setTimeout(() => badgePopup.classList.remove('show'), 1800);
+    }
+
+    document.querySelectorAll('.profile-badge').forEach(badge => {
+      badge.addEventListener('click', () => showBadge(badge.dataset.badge));
+      badge.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          showBadge(badge.dataset.badge);
         }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+      });
+    });
 
-        const flakes = [];
-        const flakeCount = 45; // Subtle snowfall
+    // Discord invite metadata: use the supplied invite/server ID to pull the current
+    // server name, banner, icon and approximate member/online counts when Discord allows it.
+    async function loadDiscordServer() {
+      const serverCard = document.getElementById('serverCard');
+      const serverLogo = document.getElementById('serverLogo');
+      const serverName = document.getElementById('serverName');
+      const serverOnline = document.getElementById('serverOnline');
+      const serverMembers = document.getElementById('serverMembers');
+      const invite = 'riotgamesdevrel';
+      const serverId = '187652476080488449';
 
-        for (let i = 0; i < flakeCount; i++) {
-            flakes.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                radius: Math.random() * 2 + 1,
-                density: Math.random() * 1,
-                opacity: Math.random() * 0.5 + 0.3
-            });
+      try {
+        const res = await fetch(`https://discord.com/api/v10/invites/${invite}?with_counts=true&with_expiration=true`);
+        if (!res.ok) throw new Error('Discord invite unavailable');
+        const data = await res.json();
+        const guild = data.guild || {};
+
+        if (guild.name) serverName.textContent = guild.name;
+        if (guild.icon) serverLogo.src = `https://cdn.discordapp.com/icons/${guild.id || serverId}/${guild.icon}.png?size=128`;
+        if (guild.banner) {
+          serverCard.style.backgroundImage = `linear-gradient(rgba(0,0,0,.32), rgba(0,0,0,.62)), url('https://cdn.discordapp.com/banners/${guild.id || serverId}/${guild.banner}.png?size=1024')`;
         }
-
-        function drawSnow() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < flakeCount; i++) {
-                const f = flakes[i];
-                ctx.beginPath();
-                ctx.fillStyle = `rgba(255, 255, 255, ${f.opacity})`;
-                ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                f.y += Math.cos(f.density) + 1 + f.radius / 2;
-                f.x += Math.sin(f.density) * 0.5;
-
-                if (f.y > canvas.height) {
-                    f.y = -10;
-                    f.x = Math.random() * canvas.width;
-                }
-            }
-            requestAnimationFrame(drawSnow);
+        if (typeof data.approximate_presence_count === 'number') {
+          serverOnline.innerHTML = `<i class="fa-solid fa-circle" style="color:#23a55a;font-size:9px"></i> ${data.approximate_presence_count.toLocaleString()} online`;
         }
-        drawSnow();
-
-        // Modal Logic
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
+        if (typeof data.approximate_member_count === 'number') {
+          serverMembers.innerHTML = `<i class="fa-solid fa-circle" style="color:#b5bac1;font-size:9px"></i> ${data.approximate_member_count.toLocaleString()} members`;
         }
-        function closeModal(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+      } catch (err) {
+        // Keep the supplied fallback card exactly usable when Discord blocks browser-side requests.
+      }
+    }
+    loadDiscordServer();
 
-        // Load Products from products.js
-        window.onload = function() {
-            if (typeof empireProducts !== 'undefined') {
-                const list = document.getElementById('dynamicProductsList');
-                empireProducts.forEach(prod => {
-                    const card = document.createElement('div');
-                    card.className = 'product-card';
-                    card.onclick = () => showDynamicProduct(prod);
-                    
-                    let badge = prod.isSoldOut 
-                        ? `<span class="badge-sold">SOLD OUT</span>`
-                        : (prod.isPro ? `<span class="badge-pro"><i class="fa-solid fa-dollar-sign"></i> ${prod.price}</span>` : `<span class="badge-free">FREE</span>`);
+    // Snowfall Generator
+    function createSnowflake() {
+      const snowflake = document.createElement('div');
+      snowflake.classList.add('snowflake');
+      snowflake.innerHTML = '❄';
+      snowflake.style.left = Math.random() * 100 + 'vw';
+      snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+      snowflake.style.fontSize = Math.random() * 8 + 10 + 'px';
+      snowflake.style.opacity = Math.random();
+      document.body.appendChild(snowflake);
+      setTimeout(() => snowflake.remove(), 5000);
+    }
+    setInterval(createSnowflake, 150);
+  </script>
 
-                    card.innerHTML = `
-                        <div class="product-info">
-                            <img src="${prod.image || 'https://files.catbox.moe/oufe4q.jpg'}" class="link-icon" alt="">
-                            <span class="product-title">${prod.title}</span>
-                        </div>
-                        ${badge}
-                    `;
-                    list.appendChild(card);
-                });
-            }
-        };
-
-        function showDynamicProduct(prod) {
-            document.getElementById('dynTitle').innerText = prod.title;
-            
-            // Gallery
-            const gallery = document.getElementById('dynGallery');
-            gallery.innerHTML = '';
-            if(prod.screenshots && prod.screenshots.length > 0) {
-                prod.screenshots.forEach(src => {
-                    gallery.innerHTML += `<img src="${src}">`;
-                });
-            }
-
-            // Contact System
-            const contact = document.getElementById('dynContact');
-            contact.innerHTML = '';
-
-            if(prod.isSoldOut) {
-                contact.innerHTML = `<p style="color:#ff3d00; text-align:center; font-weight:bold;">THIS PRODUCT IS CURRENTLY SOLD OUT!</p>`;
-            } else {
-                if(prod.sellerDiscordId) {
-                    contact.innerHTML += `<a href="https://discord.com/users/${prod.sellerDiscordId}" target="_blank" class="buy-btn buy-discord"><i class="fa-brands fa-discord"></i> Owner Discord</a>`;
-                }
-                contact.innerHTML += `<a href="https://discord.gg/empirexe" target="_blank" class="buy-btn buy-server"><i class="fa-brands fa-discord"></i> Empire Server</a>`;
-                contact.innerHTML += `<a href="mailto:contact@empire.2bd.net" class="buy-btn buy-email"><i class="fa-solid fa-envelope"></i> Email Us</a>`;
-            }
-
-            openModal('dynamicModal');
-        }
-    </script>
 </body>
 </html>
